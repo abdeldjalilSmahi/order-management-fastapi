@@ -8,7 +8,8 @@ class Commande(BaseModel):
 
 
 class CommandeModel(BaseModel):
-    description : str
+    description: str
+
 
 #
 # commande = Commande(description="Votre description ici")
@@ -16,8 +17,8 @@ class CommandeModel(BaseModel):
 # commande = Commande(**commande_model.commande.__dict__)
 # print(commande.__dict__)
 
-commandeModel = CommandeModel(description="la description de oussama ")
-data = commandeModel.__dict__
-description = data["description"]
-cmd = Commande(description=description)
-print(cmd.id_commande)
+# commandeModel = CommandeModel(description="la description de oussama ")
+# data = commandeModel.description
+# # description = data["description"]
+# cmd = Commande(description=data)
+# print(cmd.__dict__)

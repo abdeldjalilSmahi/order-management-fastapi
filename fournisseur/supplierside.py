@@ -1,39 +1,32 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+import threading
 
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Body
+from models.models import CommandeModel, Commande
 import pika
-from threading import Lock
-
-class RabbitMQConnectionSingleton:
-    _instance = None
-    _lock = Lock()
-
-    def __new__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls._instance is None:
-                cls._instance = super(RabbitMQConnectionSingleton, cls).__new__(cls)
-                # Initialisation de la connexion RabbitMQ
-                cls._instance.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-                cls._instance.channel = cls._instance.connection.channel()
-        return cls._instance
-
-    def get_channel(self):
-        return self._instance.channel
-
-    def close_connection(self):
-        if self._instance.connection:
-            self._instance.connection.close()
-            self._instance = None
-
-
-# Récupération de la connexion RabbitMQ
-rabbitmq_connection = RabbitMQConnectionSingleton()
-channel = rabbitmq_connection.get_channel()
-
-# Utilisation de la connexion (par exemple, déclarer une queue)
-channel.queue_declare(queue='ma_queue')
+import json
 
 app = FastAPI()
 
+
 @app.post("/place_order")
-async def place_order():
-    pass
+async def place_order(backgroundtasks: BackgroundTasks, commande: CommandeModel = Body()):
+    description = commande.description
+    # commande = Commande(description=description)
+    message = "test"
+    backgroundtasks.add_task(envoyer_message_a_queue, message)
+    return {"message": "Votre commande a été bien reçu"}
+
+
+def envoyer_message_a_queue(message: str):
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='ma_queue')
+    channel.basic_publish(exchange='', routing_key='ma_queue', body=message)
+    channel.close()
+    connection.close()
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
