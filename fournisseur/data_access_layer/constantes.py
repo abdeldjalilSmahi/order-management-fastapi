@@ -1,0 +1,1 @@
+PRODUCTS_LIST = ["produit1", "produit2", "produit3"]
