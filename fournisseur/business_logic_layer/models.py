@@ -75,7 +75,4 @@ class LigneCommande:
 if __name__ == "__main__":
     # Utilisation de la classe
     customer = CustomerBllModel("slahi", "", "john.doe@example.com", "123-456-7890")
-    if customer.is_valid():
-        print("Le client est valide.")
-    else:
-        print("Le client n'est pas valide.")
+    print(customer.__dict__)

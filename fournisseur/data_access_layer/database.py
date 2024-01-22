@@ -1,31 +1,28 @@
-# # database.py
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.ext.declarative import declarative_base
-#
-# Base = declarative_base()
-# connection_string = "mssql+pyodbc://jalil:Awtbp!718293@process.database.windows.net:1433/orderManagement?driver=ODBC+Driver+18+for+SQL+Server"
-# class Database:
-#     _instance = None
-#
-#     def __new__(cls):
-#         if cls._instance is None:
-#             cls._instance = super(Database, cls).__new__(cls)
-#             engine = create_engine(connection_string)
-#             Base.metadata.create_all(engine)
-#             cls._session_factory = sessionmaker(bind=engine)
-#         return cls._instance
-#
-#     @classmethod
-#     def get_session(cls):
-#         return cls._session_factory()
+
 
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker, declarative_base  # Mis à jour pour SQLAlchemy 2.0
+from sqlalchemy.orm import Session, declarative_base  # Mis à jour pour SQLAlchemy 2.0
 import threading
-from fournisseur.data_access_layer.models import Base
 
-connection_string = "mssql+pyodbc://jalil:Awtbp!718293@porcess-cloud.database.windows.net:1433/ordermanagement?driver=ODBC+Driver+18+for+SQL+Server&Connection Timeout=3600"
+import fournisseur.data_access_layer.models
+from fournisseur.data_access_layer.models import Base
+from sqlalchemy.engine import URL
+
+connection_url = URL.create(
+    "mssql+pyodbc",
+    username="jalil",
+    password="Awtbp!718293",  # Remplacez par votre mot de passe réel
+    host="porcess-cloud.database.windows.net",
+    port=1433,
+    database="ordermanagement",
+    query={
+        "driver": "ODBC Driver 18 for SQL Server",
+        "Encrypt": "yes",
+        "TrustServerCertificate": "yes",
+        "Connection Timeout": "0"
+    }
+)
+
 
 
 class Database:
@@ -39,10 +36,11 @@ class Database:
                 cls._instance._initialize(*args, **kwargs)
         return cls._instance
 
-    def _initialize(self, connection_string = "mssql+pyodbc://jalil:Awtbp!718293@porcess-cloud.database.windows.net:1433/ordermanagement?driver=ODBC+Driver+18+for+SQL+Server&Connection Timeout=3600"):
+    def _initialize(self,
+                    connection_string=connection_url):
         try:
             self.engine = create_engine(connection_string)
-            self.Session = sessionmaker(bind=self.engine)
+            self.session = Session(bind=self.engine)
             self.create_tables()
         except Exception as e:
             pass
@@ -52,7 +50,7 @@ class Database:
         Base.metadata.create_all(self.engine)
 
     def get_session(self):
-        return self.Session()
+        return self.session
 
 
 def test_session_creation():
@@ -66,13 +64,13 @@ def test_session_creation():
 
 if __name__ == "__main__":
     # Initialisez la base de données. Cela doit être fait avant d'essayer de créer ou d'interagir avec la base de données
-    db = Database(connection_string)
+    db = Database(connection_url)
     session = db.get_session()
     try:
         # Exécutez une requête de test
-        result = session.execute(text("SELECT 1"))
-        print('hi')
-        assert result is not None, "La session n'a pas été créée correctement"
+        data = session.query(fournisseur.data_access_layer.models.CustomerDalModel.firstname).all()
+
+        for row in data:
+            print(row)
     finally:
         session.close()
-

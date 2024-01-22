@@ -32,7 +32,7 @@ def valider_operation(client: CustomerBllModel):
     match decision:
         case "oui" | "ok" | "valide":
             print("operation validé")
-            DataAccessClient.ajouter_client(client)
+            DataAccessClient.add_customer(client)
         case "non" | "no" | "pas" | "valide pas":
             print("operation non validé")
         case _:
