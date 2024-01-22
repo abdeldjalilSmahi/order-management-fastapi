@@ -4,13 +4,13 @@ from datetime import datetime
 from fournisseur.data_access_layer.models import CustomerDalModel
 
 
-class Order:
+class OrderBllModel:
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
 
-class Product:
+class ProductBllModel:
     n_article: int
     designation: str
     price: float
@@ -53,22 +53,22 @@ class Historique:
     pass
 
 
-class LigneCommande:
-    order: Order
-    product: Product
-    quantity: int
-
-    def __init__(self, order, product, quantity):
-        self.order = order
-        self.product = product
-        self.quantity = quantity
-
-        # Vous pouvez ajouter ici des validations, par exemple :
-        if not isinstance(quantity, int) or quantity < 1:
-            raise ValueError("La quantité doit être un entier positif")
-
-    def calculer_total(self):
-        return self.product.price * self.quantity
+# class LigneCommande:
+#     order: Order
+#     product: Product
+#     quantity: int
+#
+#     def __init__(self, order, product, quantity):
+#         self.order = order
+#         self.product = product
+#         self.quantity = quantity
+#
+#         # Vous pouvez ajouter ici des validations, par exemple :
+#         if not isinstance(quantity, int) or quantity < 1:
+#             raise ValueError("La quantité doit être un entier positif")
+#
+#     def calculer_total(self):
+#         return self.product.price * self.quantity
 
 
 #
