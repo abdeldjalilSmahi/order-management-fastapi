@@ -12,6 +12,7 @@ class Status(enum.Enum):
     initiee = "Initiée"
     en_attente = "En attente"
 
+
 class Base(DeclarativeBase):
     pass
 
@@ -26,7 +27,7 @@ class CustomerDalModel(Base):
     orders: Mapped[List["OrderDalModel"]] = relationship(back_populates="customer")
 
     def __repr__(self):
-        data = tuple((self.customer_id, self.firstname,  self.lastname, self.email, self.phone_number))
+        data = tuple((self.customer_id, self.firstname, self.lastname, self.email, self.phone_number))
         return data.__str__()
 
 
@@ -45,10 +46,9 @@ class ProductDalModel(Base):
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
+
 class HistoriqueDalModel(Base):
     __tablename__ = "Historiques"
     historique_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     date_historique: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
     actual_status: Mapped[Status] = mapped_column(Enum(Status), nullable=False)
-
-

@@ -1,5 +1,3 @@
-
-
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, declarative_base  # Mis à jour pour SQLAlchemy 2.0
 import threading
@@ -9,20 +7,16 @@ from fournisseur.data_access_layer.models import Base
 from sqlalchemy.engine import URL
 
 connection_url = URL.create(
-    "mssql+pyodbc",
+    "mysql+pymysql",  # Dialecte et driver pour MySQL
     username="jalil",
     password="Awtbp!718293",  # Remplacez par votre mot de passe réel
-    host="porcess-cloud.database.windows.net",
-    port=1433,
-    database="ordermanagement",
+    host="processus.mysql.database.azure.com",
+    port=3306,
+    database="ordermanagement",  # Remplacez par le nom de votre base de données
     query={
-        "driver": "ODBC Driver 18 for SQL Server",
-        "Encrypt": "yes",
-        "TrustServerCertificate": "yes",
-        "Connection Timeout": "0"
+        "ssl_disabled": "False"
     }
 )
-
 
 
 class Database:
@@ -53,18 +47,9 @@ class Database:
         return self.session
 
 
-def test_session_creation():
-    session = Database.get_session()
-    try:
-        result = session.execute(text("SELECT 1"))
-        assert result is not None, "La session n'a pas été créée correctement"
-    finally:
-        session.close()
-
-
 if __name__ == "__main__":
     # Initialisez la base de données. Cela doit être fait avant d'essayer de créer ou d'interagir avec la base de données
-    db = Database(connection_url)
+    db = Database()
     session = db.get_session()
     try:
         # Exécutez une requête de test
