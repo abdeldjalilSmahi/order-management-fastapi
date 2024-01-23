@@ -1,8 +1,4 @@
 # Models for business logic layer
-from datetime import datetime
-
-from fournisseur.data_access_layer.models import CustomerDalModel
-
 
 class OrderBllModel:
     def __init__(self, *args, **kwargs):

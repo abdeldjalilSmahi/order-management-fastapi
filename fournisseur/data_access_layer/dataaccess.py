@@ -1,10 +1,10 @@
 """
 Data Access Layer pour le client
 """
-import fournisseur.business_logic_layer.models
-from fournisseur.data_access_layer.database import Database
-from fournisseur.business_logic_layer.models import CustomerBllModel, OrderBllModel
-from models import CustomerDalModel
+import business_logic_layer.models
+from data_access_layer.database import Database
+from business_logic_layer.models import CustomerBllModel, OrderBllModel
+from data_access_layer.models import CustomerDalModel
 from sqlalchemy import select
 
 
@@ -46,6 +46,7 @@ class DataAccessCustomer:
                 # Gérer les exceptions ici
                 print(f"Erreur lors de la réccupération du client : {e}")
 
+
     @staticmethod
     def get_customer_by_email(email: str) -> CustomerDalModel:
         with DataAccessCustomer.db.get_session() as session:
@@ -58,6 +59,9 @@ class DataAccessCustomer:
                 # Gérer les exceptions ici
                 print(f"Erreur lors de la réccupération du client : {e}")
 
+
+
+
 # class DataAccessOrders:
 #     db = Database()
 #
@@ -67,11 +71,12 @@ class DataAccessCustomer:
 #
 
 if __name__ == "__main__":
-    client = fournisseur.business_logic_layer.models.CustomerBllModel(firstname="smahi", lastname="jalil",
+    client = business_logic_layer.models.CustomerBllModel(firstname="smahi", lastname="jalil",
                                                                       email="smahi.jilo@gmail.com",
                                                                       phone_number="5848949855")
 
     # DataAccessClient.get_customer_by_id(2)
     # DataAccessClient.add_customer(client)
     # Example
-    DataAccessCustomer.get_customer_by_email('smahi.jilo@gmail.com')
+    # print(DataAccessCustomer.get_customer_by_id(1))
+

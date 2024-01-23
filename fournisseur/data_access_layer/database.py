@@ -2,8 +2,8 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, declarative_base  # Mis à jour pour SQLAlchemy 2.0
 import threading
 
-import fournisseur.data_access_layer.models
-from fournisseur.data_access_layer.models import Base
+import data_access_layer.models
+from data_access_layer.models import Base
 from sqlalchemy.engine import URL
 
 connection_url = URL.create(
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     session = db.get_session()
     try:
         # Exécutez une requête de test
-        data = session.query(fournisseur.data_access_layer.models.CustomerDalModel.firstname).all()
+        data = session.query(data_access_layer.models.CustomerDalModel.firstname).all()
 
         for row in data:
             print(row)

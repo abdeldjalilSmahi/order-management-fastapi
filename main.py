@@ -35,19 +35,20 @@
 #     return {"message": "Commande en cours d'envoi"}
 #
 # # Démarrage du consommateur dans un thread séparé
-# threading.Thread(target=verifier_commande, daemon=True).start()
-#
+# # threading.Thread(target=verifier_commande, daemon=True).start()
+# #
 # if __name__ == "__main__":
+#     from fournisseur.presentation_layer.supplierside import app
 #     import uvicorn
 #     uvicorn.run(app, host="127.0.0.1", port=8000)
 
-import validators
-from validators.utils import ValidationError
-
-def valider_url(url):
-    result = validators.url(url)
-    return False if isinstance(result, ValidationError) else True
-
-# Exemples d'utilisation
-print(valider_url("http://127.0.0.1:8080"))        # Doit retourner True
-print(valider_url("http://258.258.258.268:26849189")) # Doit retourner False
+# import validators
+# from validators.utils import ValidationError
+#
+# def valider_url(url):
+#     result = validators.url(url)
+#     return False if isinstance(result, ValidationError) else True
+#
+# # Exemples d'utilisation
+# print(valider_url("http://127.0.0.1:8080"))        # Doit retourner True
+# print(valider_url("http://258.258.258.268:26849189")) # Doit retourner False

@@ -1,6 +1,8 @@
 # test.py
 from sqlalchemy import create_engine, exc
 from sqlalchemy.sql import text
+
+
 # Tester la connexion à la base de données  !
 # REUSSI :D
 def test_connection():
@@ -16,6 +18,7 @@ def test_connection():
                 print("Connexion réussie, résultat :", row[0])
     except exc.SQLAlchemyError as e:
         print("Erreur lors de la connexion à la base de données :", e)
+
 
 if __name__ == "__main__":
     test_connection()

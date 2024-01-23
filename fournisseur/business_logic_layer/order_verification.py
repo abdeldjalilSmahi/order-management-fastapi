@@ -1,7 +1,7 @@
 import json
-from fournisseur.business_logic_layer.message_queues import receveoir_message_a_queue
-from fournisseur.business_logic_layer.models import CustomerBllModel
-from fournisseur.data_access_layer.dataaccess import DataAccessCustomer
+from business_logic_layer.message_queues import receveoir_message_a_queue
+from business_logic_layer.models import CustomerBllModel
+from data_access_layer.dataaccess import DataAccessCustomer
 
 
 def on_message_received(ch, method, properties, body):
@@ -33,6 +33,7 @@ def valider_operation(client: CustomerBllModel):
         case "oui" | "ok" | "valide":
             print("operation validé")
             DataAccessCustomer.add_customer(client)
+            #
         case "non" | "no" | "pas" | "valide pas":
             print("operation non validé")
         case _:
