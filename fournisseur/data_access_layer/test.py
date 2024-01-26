@@ -2,6 +2,8 @@
 from sqlalchemy import create_engine, exc
 from sqlalchemy.sql import text
 
+from data_access_layer.models import Status
+
 
 # Tester la connexion à la base de données  !
 # REUSSI :D
@@ -21,4 +23,7 @@ def test_connection():
 
 
 if __name__ == "__main__":
-    test_connection()
+    string_value = "On Hold"
+
+
+    print(corresponding_status)

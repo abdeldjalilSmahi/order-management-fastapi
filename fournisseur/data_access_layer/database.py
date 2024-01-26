@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, declarative_base  # Mis à jour pour SQLAlchemy 2.0
 import threading
@@ -34,7 +36,7 @@ class Database:
                     connection_string=connection_url):
         try:
             self.engine = create_engine(connection_string)
-            self.session = Session(bind=self.engine)
+            self.session = Session(bind=self.engine, autoflush=True)
             self.create_tables()
         except Exception as e:
             pass

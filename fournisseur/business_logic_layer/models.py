@@ -1,48 +1,75 @@
 # Models for business logic layer
+import datetime
+import enum
+from typing import Optional
+from data_access_layer.models import Status, Events
 
-class OrderBllModel:
-    def __init__(self, *args, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-
-class ProductBllModel:
-    n_article: int
-    designation: str
-    price: float
-    description: str
-    quantity: int
-
-    def __init__(self, n_article: int, designation: str, price: float, description: str, quantity: int):
-        self.n_article = n_article
-        self.designation = designation
-        self.price = price
-        self.description = description
-        self.quantity = quantity
+# class Status(enum.Enum):
+#     validee = "Validée"
+#     annulee = "Annulée"
+#     initiee = "Initiée"
+#     en_attente = "En attente"
+#
+#
+# class Events(enum.Enum):
+#     create = "Create"
+#     update = "Update"
+#     delete = "Delete"
 
 
 class CustomerBllModel:  # Pour faire les vérification de la commande
+    customer_id = Optional[int]
     firstname: str
     lastname: str
     email: str
     phone_number: str
 
-    def __init__(self, firstname: str, lastname: str, email: str, phone_number: str):
+    def __init__(self, firstname: str, lastname: str, email: str, phone_number: str, customer_id: Optional[int] = None):
+        self.customer_id = customer_id
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
         self.phone_number = phone_number
 
-    @staticmethod
-    def is_valid_field(field: str) -> bool:
-        return field is not None and field != "string" and field != ""
 
-    def is_valid(self) -> bool:
-        return all([
-            CustomerBllModel.is_valid_field(self.firstname),
-            CustomerBllModel.is_valid_field(self.lastname),
-            CustomerBllModel.is_valid_field(self.email)
-        ])
+class OrderBllModel:
+    order_id: int
+    order_date: datetime.datetime
+    customer_id: int
+    actual_status: Status
+    customer: CustomerBllModel
+
+    def __init__(self, order_id: int, order_date: datetime.datetime, customer_id: int, actual_status: Status,
+                 customer: CustomerBllModel):
+        self.order_id = order_id
+        self.order_date = order_date
+        self.customer_id = customer_id
+        self.actual_status = actual_status
+        self.customer = customer
+
+    def to_dict(self) -> dict:
+        return {
+            "order_id": self.order_id,
+            "order_date": self.order_date.strftime("%Y-%m-%dT%H:%M:%S"),
+            "customer_id": self.customer_id,
+            "actual_status": self.actual_status.value
+        }
+
+
+class ProductBllModel:
+    product_id = Optional[int]
+    product_name: str
+    unit_price: float
+    description: str
+    quantity: int
+
+    def __init__(self, product_name: str, unit_price: float, description: str, quantity: int,
+                 product_id: Optional[int] = None):
+        self.product_id = product_id
+        self.product_name = product_name
+        self.unit_price = unit_price
+        self.description = description
+        self.quantity = quantity
 
 
 class Historique:
