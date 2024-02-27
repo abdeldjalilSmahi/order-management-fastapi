@@ -29,7 +29,7 @@ def on_message_received(ch, method, properties, body):
                 "order_lines": products_quantities
             }
             data_to_send = json.dumps(data_to_next_step)
-            envoyer_message_a_queue('order_verifcation', data_to_send)
+            envoyer_message_a_queue('order_verifcation', data_to_send) # message
             print("Traitement terminé.")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
