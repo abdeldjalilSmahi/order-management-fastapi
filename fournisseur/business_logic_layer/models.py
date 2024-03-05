@@ -4,6 +4,7 @@ import enum
 from typing import Optional
 from data_access_layer.models import Status, Events
 
+
 # class Status(enum.Enum):
 #     validee = "Validée"
 #     annulee = "Annulée"
@@ -19,13 +20,16 @@ from data_access_layer.models import Status, Events
 
 class CustomerBllModel:  # Pour faire les vérification de la commande
     customer_id = Optional[int]
+    customer_number: str
     firstname: str
     lastname: str
     email: str
     phone_number: str
 
-    def __init__(self, firstname: str, lastname: str, email: str, phone_number: str, customer_id: Optional[int] = None):
+    def __init__(self, customer_number: str, firstname: str, lastname: str, email: str, phone_number: str,
+                 customer_id: Optional[int] = None):
         self.customer_id = customer_id
+        self.customer_number = customer_number
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -34,14 +38,16 @@ class CustomerBllModel:  # Pour faire les vérification de la commande
 
 class OrderBllModel:
     order_id: int
+    order_number: int
     order_date: datetime.datetime
     customer_id: int
     actual_status: Status
     customer: CustomerBllModel
 
-    def __init__(self, order_id: int, order_date: datetime.datetime, customer_id: int, actual_status: Status,
+    def __init__(self, order_id: int, order_number,  order_date: datetime.datetime, customer_id: int, actual_status: Status,
                  customer: CustomerBllModel):
         self.order_id = order_id
+        self.order_number = order_number
         self.order_date = order_date
         self.customer_id = customer_id
         self.actual_status = actual_status
@@ -50,6 +56,7 @@ class OrderBllModel:
     def to_dict(self) -> dict:
         return {
             "order_id": self.order_id,
+            "order_number": self.order_number,
             "order_date": self.order_date.strftime("%Y-%m-%dT%H:%M:%S"),
             "customer_id": self.customer_id,
             "actual_status": self.actual_status.value

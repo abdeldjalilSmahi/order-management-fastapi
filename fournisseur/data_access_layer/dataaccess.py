@@ -1,6 +1,8 @@
 """
 Data Access Layer pour le client
 """
+import time
+
 from sqlalchemy.orm import Session
 
 import business_logic_layer.models
@@ -379,7 +381,7 @@ class DataAccessorTransaction:
     """
 
     @staticmethod
-    def add_order(customer_id: int) -> OrderDalModel:
+    def add_order(customer_id: int, order_number:int) -> OrderDalModel:
         db = Database()
         with db.get_session() as session:
             try:
@@ -387,7 +389,7 @@ class DataAccessorTransaction:
                 if customer_dal_model is None:
                     print("Customer does not exist")
                     return
-                new_order = OrderDalModel(customer_id=customer_dal_model.customer_id)
+                new_order = OrderDalModel(customer_id=customer_dal_model.customer_id, order_number= order_number)
                 session.add(new_order)  ## Est ce que je mets session.add ou non
                 customer_dal_model.orders.append(new_order)
                 new_order.customer = customer_dal_model
@@ -552,6 +554,17 @@ class DataAccessorTransaction:
             return session.scalars(select(ProductDalModel).order_by(ProductDalModel.product_id)).all()
 
     @staticmethod
+    def get_all_products_details() -> list[tuple]:
+        db = Database()
+        with db.get_session() as session:
+            # Construire la requête pour sélectionner les colonnes désirées
+            query = select(ProductDalModel.product_name, ProductDalModel.unit_price).order_by(
+                ProductDalModel.product_id)
+            # Exécuter la requête et récupérer les résultats sous forme de liste de tuples
+            result = session.execute(query).fetchall()
+            return result
+
+    @staticmethod
     def get_all_products_name() -> list[str]:
         db = Database()
         with db.get_session() as session:
@@ -652,10 +665,13 @@ if __name__ == "__main__":
 
     # DataAccessorTransaction.cancel_order(db, 1)
     # print(type(DataAccessorTransaction.get_product_by_name(db, "product1")))
+    product1 = ProductBllModel("product1", 5.80, "notre premier produit", 1000)
+    product2 = ProductBllModel("product2", 5.80, "notre deuxième produit", 1000)
 
-    # product2 = ProductBllModel("product2", 5.80, "notre deuxième produit", 1000)
-    # product1 = ProductBllModel("product1", 5.80, "notre premier produit", 1000)
-    # DataAccessorTransaction.add_product(product1)
+    DataAccessorTransaction.add_product(product1)
+    time.sleep(1)
+    DataAccessorTransaction.add_product(product2)
+
     # DataAccessorTransaction.add_product
 
-    print(type(DataAccessorTransaction.get_last_order_initie_of_customer(3)))
+    # print(DataAccessorTransaction.get_all_products_details())

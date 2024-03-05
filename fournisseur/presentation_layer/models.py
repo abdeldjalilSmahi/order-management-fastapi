@@ -11,14 +11,21 @@ class Credentials(BaseModel):
 
 
 class CommandePlModel(BaseModel):  #JSON de l'API
+    customer_number : str
     firstname: str
     lastname: str
     email: str
     phone_number: Optional[str] = None
-    url: str
-    method_name: str
+    order_number: int
+    # url: str
+    # method_name: str
     produits: Dict[str, int]
 
+class Decision(BaseModel):
+    customer_number: str
+    order_id : int
+    order_number : int
+    status : str
 
 
 

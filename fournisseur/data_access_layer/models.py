@@ -8,6 +8,7 @@ from sqlalchemy import func
 
 
 class Status(enum.Enum):
+    confiremd_by_customer = "Confirmed by customer"
     validated = "Validated"
     cancelled_by_customer = "Cancelled by Customer"
     initiated = "Initiated"
@@ -47,6 +48,7 @@ class Base(DeclarativeBase):
 class CustomerDalModel(Base):
     __tablename__ = "Customers"
     customer_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    customer_number: Mapped[str] = mapped_column(String(36), unique=True,  nullable=False)
     firstname: Mapped[str] = mapped_column(String(50), nullable=False)
     lastname: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
@@ -55,7 +57,8 @@ class CustomerDalModel(Base):
                                                          passive_deletes=True)
 
     def __repr__(self):
-        data = tuple((self.customer_id, self.firstname, self.lastname, self.email, self.phone_number))
+        data = tuple((self.customer_id, self.customer_number, self.firstname, self.lastname, self.email
+                      , self.phone_number))
         return data.__str__()
 
     def to_dict(self) -> dict:
@@ -64,6 +67,7 @@ class CustomerDalModel(Base):
             "lastname": self.lastname,
             "email": self.email,
             "phone_number": self.phone_number,
+            "customer_number": self.customer_number,
             "customer_id": self.customer_id
         }
 
@@ -71,6 +75,7 @@ class CustomerDalModel(Base):
 class OrderDalModel(Base):
     __tablename__ = "Orders"
     order_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    order_number: Mapped[int] = mapped_column(Integer, nullable=False)
     order_date: Mapped[datetime.datetime] = mapped_column(DateTime, default=func.now())
     customer_id: Mapped[int] = mapped_column(ForeignKey("Customers.customer_id", ondelete="CASCADE"))
     actual_status: Mapped[Status] = mapped_column(Enum(Status), nullable=False, default=Status.initiated)
@@ -79,12 +84,13 @@ class OrderDalModel(Base):
     historiques: Mapped[List["HistoriqueDalModel"]] = relationship(back_populates="order")
 
     def __repr__(self):
-        data = tuple((self.order_id, self.order_date, self.customer_id, self.actual_status.name))
+        data = tuple((self.order_id,  self.order_number, self.order_date, self.customer_id, self.actual_status.name))
         return data.__str__()
 
     def to_dict(self) -> dict:
         return {
             "order_id": self.order_id,
+            "order_number": self.order_number,
             "order_date": self.order_date,
             "customer_id": self.customer_id,
             "actual_status": self.actual_status

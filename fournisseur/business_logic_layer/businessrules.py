@@ -46,6 +46,14 @@ class BusinessRulesCustomer:
 
 class BusinessRulesProducts:
     @classmethod
+    def get_all_products(cls):
+        product_names_in_database = set(DataAccessorTransaction.get_all_products_details())
+        dictionnaire = {}
+        for each_tuple in product_names_in_database:
+            dictionnaire[each_tuple[0]] = each_tuple[1]
+        return dictionnaire
+
+    @classmethod
     def _verify_products_names(cls, product_names_bll_model: list[str]):
         for product_name_bll_model in product_names_bll_model:
             if not product_name_bll_model or product_name_bll_model.lower() == "string":
@@ -111,6 +119,14 @@ class BusinessRulesOrder:
             print(f"Erreur lors de la modification du status de l'order : {e}")
         return self.order.status
 
+    @staticmethod
+    def update_status_order(order_id, status: Status):
+        try:
+            DataAccessorTransaction.update_order_status(order_id, status)
+        except Exception as e:
+            print(f"Erreur lors de la modification du status de l'order : {e}")
+        return status
+
     def cancel_order(self):
         try:
             order_id = self.order.order_id
@@ -119,9 +135,10 @@ class BusinessRulesOrder:
             print("Erreur lors de la suppression des lignes de commandes ")
 
     @staticmethod
-    def add_order(customer: CustomerBllModel) -> OrderBllModel:
+    def add_order(customer: CustomerBllModel, order_number: int) -> OrderBllModel:
         try:
-            order_dal_model = DataAccessorTransaction.add_order(customer.customer_id)
+            order_dal_model = DataAccessorTransaction.add_order(customer_id=customer.customer_id,
+                                                                order_number=order_number)
             return OrderBllModel(customer=customer, **order_dal_model.to_dict())
         except Exception as e:
             print("Erreur lors de l'ajout de la commande")
@@ -160,6 +177,13 @@ class BusinessRulesOrder:
         order_bll_model["customer"] = customer_bll_model
         order_bll_model = OrderBllModel(**order_bll_model)
         return BusinessRulesOrder(customer_bll_model, order_bll_model, order_lines)
+
+    def to_dict(self):
+        return {
+            "customer": self.customer.__dict__,
+            "order": self.order.to_dict(),
+            "order_lines": self.order_lines
+        }
 
 
 class BusinessRulesOrderLines:

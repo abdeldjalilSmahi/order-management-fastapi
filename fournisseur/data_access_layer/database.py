@@ -39,7 +39,7 @@ class Database:
             self.session = Session(bind=self.engine, autoflush=True)
             self.create_tables()
         except Exception as e:
-            pass
+            print(f"Erreur lors de l'initialisation de la base de données: {e}")
 
     def create_tables(self):
 
