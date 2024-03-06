@@ -33,7 +33,7 @@ def on_message_received(ch, method, properties, body):
         print("Traitement terminé. Passage à la gestion de devis")
 
     else:
-        ## PAss au suivant
+        ## PAss au suivant ## Annulation deja fait dans le code de la validation !
         print("Traitement terminé. Commande annulée !")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 

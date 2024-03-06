@@ -17,7 +17,7 @@ def on_message_received(ch, method, properties, body):
                                                    order_number=data.get('order_number'),
                                                    customer_id=None,
                                                    order_id=None
-                                                   , email=data.get('email'),
+                                                        , email=data.get('email'),
                                                    status=Status.cancelled_by_seller,
                                                    decision=message)
         print(f"Customer side : {customer_side_response['message']}")

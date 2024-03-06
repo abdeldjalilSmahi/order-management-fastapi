@@ -21,9 +21,10 @@ async def place_order(backgroundtasks: BackgroundTasks, commande: CommandePlMode
 
 @app.post("/customer_decision/{customer_id}")
 async def customer_decision(customer_id: int, backgroundtasks: BackgroundTasks,decision: Decision = Body()):
-    data = json.dumps(decision.model_dump())
+    data = decision.model_dump()
     data['customer_id'] = customer_id
-    message = data
+    message = json.dumps(data)
+    print(message)
     backgroundtasks.add_task(envoyer_message_a_queue, 'customer_decision',  message)
     return {"message": "Cher(e) client(e) votre décision a été prise en considération, vous allez recevoir votre "
                        "facture pour faire le paiement"}

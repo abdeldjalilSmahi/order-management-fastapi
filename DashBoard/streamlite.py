@@ -15,7 +15,7 @@ def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-local_css('D:\M2-Uvsq\Tp Servicemetier\order-management-fastapi\DashBoard\style.css')
+local_css('style.css')
 
 def run_query(query):
     cursor = conn.cursor()
@@ -47,7 +47,7 @@ SELECT SUM(orderlines.quantity_ordered * products.unit_price) AS chiffre_affaire
 FROM orderlines
 JOIN products ON orderlines.product_id = products.product_id
 JOIN orders ON orderlines.order_id = orders.order_id
-WHERE orders.actual_status= 'validated';
+WHERE orders.actual_status= 'validated' OR orders.actual_status= 'confiremd_by_customer';
 """
 chiffre_affaire_data = run_query(query_chiffre_affaire)
 chiffre_affaire = chiffre_affaire_data[0][0]
@@ -70,7 +70,7 @@ SELECT products.product_name,
 FROM orderlines
 JOIN products ON orderlines.product_id = products.product_id
 JOIN orders ON orderlines.order_id = orders.order_id
-WHERE orders.actual_status = 'validated'
+WHERE orders.actual_status = 'validated' OR orders.actual_status= 'confiremd_by_customer'
 GROUP BY products.product_name;
 """
 

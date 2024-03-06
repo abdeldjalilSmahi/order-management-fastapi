@@ -44,6 +44,14 @@ class BusinessRulesCustomer:
             print(f"erreur lors de l'ajout du customer.")
 
 
+    @staticmethod
+    def get_customer_by_id(customer_id : int):
+        try:
+            return CustomerBllModel(**DataAccessorTransaction.get_customer_by_id(customer_id).to_dict())
+        except Exception as e:
+            print(f"erreur lors de la réccupération du customer.")
+
+
 class BusinessRulesProducts:
     @classmethod
     def get_all_products(cls):
@@ -68,7 +76,8 @@ class BusinessRulesProducts:
 
     @staticmethod
     def verify_products_names_and_positive_quantities(products_with_quantities: dict[str, int]):
-
+        if not products_with_quantities:
+            return False
         keys = list(products_with_quantities.keys())
         verification = BusinessRulesProducts()._verify_products_names(keys)
         if not verification:
@@ -119,17 +128,17 @@ class BusinessRulesOrder:
             print(f"Erreur lors de la modification du status de l'order : {e}")
         return self.order.status
 
-    @staticmethod
-    def update_status_order(order_id, status: Status):
-        try:
-            DataAccessorTransaction.update_order_status(order_id, status)
-        except Exception as e:
-            print(f"Erreur lors de la modification du status de l'order : {e}")
-        return status
-
     def cancel_order(self):
         try:
             order_id = self.order.order_id
+            DataAccessorTransaction.cancel_order(order_id)
+        except Exception as e:
+            print("Erreur lors de la suppression des lignes de commandes ")
+
+    @staticmethod
+    def termine_order(order):
+        try:
+            order_id = order.order_id
             DataAccessorTransaction.cancel_order(order_id)
         except Exception as e:
             print("Erreur lors de la suppression des lignes de commandes ")

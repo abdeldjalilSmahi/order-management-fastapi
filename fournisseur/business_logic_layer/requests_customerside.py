@@ -33,3 +33,8 @@ def send_devis(devis: dict, customer_number):
 
     response = requests.put(f"http://127.0.0.1:8000/order_devis/{customer_number}", json=devis)
     return response.json()
+
+
+def send_facture(facture: dict, customer_number):
+    response = requests.put(f"http://127.0.0.1:8000/order_facture/{customer_number}", json=facture)
+    return response.json()

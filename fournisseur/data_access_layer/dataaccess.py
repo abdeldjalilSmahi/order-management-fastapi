@@ -319,7 +319,6 @@ class DataAccessorTransaction:
             try:
                 # Creation de la requete
                 customer_dal_model = session.get(CustomerDalModel, customer_id)
-                print(f"{customer_dal_model}")
                 return customer_dal_model
             except Exception as e:
                 # Gérer les exceptions ici
@@ -414,7 +413,6 @@ class DataAccessorTransaction:
             try:
                 # Creation de la requete
                 order_dal_model = session.get(OrderDalModel, order_id)
-                print(f"{order_dal_model}")
                 return order_dal_model
             except Exception as e:
                 # Gérer les exceptions ici
@@ -650,28 +648,9 @@ class DataAccessorTransaction:
                 print(f"Erreur lors de l'ajout de la ligne de commande : {e}")
                 session.rollback()
 
-
-if __name__ == "__main__":
-    # client = business_logic_layer.models.CustomerBllModel(firstname="smahi", lastname="ahmed",
-    #                                                       email="smahi.ahmed12105920242025@gmail.com",
-    #                                                       phone_number="5848949855")
-    # customer = DataAccessorTransaction.get_customer_by_id(db, 1)
-    # DataAccessorTransaction.add_order(db, customer_id=customer.customer_id)
-    # DataAccessorTransaction.update_order_status(db, 1, Status.cancelled_by_customer)
-    # product = ProductBllModel("product2", 5.80, "notre deuxième produit", 50)
-    # DataAccessorTransaction.add_product(db, product)
-    # # order id = 2 , product id = 1
-    # DataAccessorTransaction.add_order_line(db,1,2,10)
-
-    # DataAccessorTransaction.cancel_order(db, 1)
-    # print(type(DataAccessorTransaction.get_product_by_name(db, "product1")))
-    product1 = ProductBllModel("product1", 5.80, "notre premier produit", 1000)
-    product2 = ProductBllModel("product2", 5.80, "notre deuxième produit", 1000)
-
-    DataAccessorTransaction.add_product(product1)
-    time.sleep(1)
-    DataAccessorTransaction.add_product(product2)
-
-    # DataAccessorTransaction.add_product
-
-    # print(DataAccessorTransaction.get_all_products_details())
+# #
+# if __name__ == "__main__":
+#     pass
+#     # DataAccessorTransaction.add_product(ProductBllModel("product1", 6.0, "our first product",10000))
+#     # DataAccessorTransaction.add_product(ProductBllModel("product2", 7.5, "our second product", 10000))
+#     DataAccessorTransaction.add_product(ProductBllModel("product3", 7.5, "our third product", 0))
