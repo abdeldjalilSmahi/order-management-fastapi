@@ -4,6 +4,7 @@
 Afin d'utiliser ce repot, nous vous invitons de créer tout d'abord un environnement virtuel:
 
 Création de l'environnement virtuel: __python -m venv venv__
+
 Activation:
 -  __Windows:__ .\venv\Scrpits\activate.bat
 - __linux:__ : source venv\bin\activate
