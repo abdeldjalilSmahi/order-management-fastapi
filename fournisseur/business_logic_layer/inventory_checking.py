@@ -1,8 +1,10 @@
 import json
+import time
 from datetime import datetime
 
 from business_logic_layer.message_queues import receveoir_message_a_queue, envoyer_message_a_queue
 from business_logic_layer.models import CustomerBllModel, OrderBllModel
+from business_logic_layer.order_verification import clear_console
 from business_logic_layer.requests_customerside import send_confirmation
 from data_access_layer.dataaccess import DataAccessorTransaction
 from business_logic_layer.businessrules import BusinessRulesProducts, BusinessRulesOrder, BusinessRulesOrderLines
@@ -36,8 +38,10 @@ def on_message_received(ch, method, properties, body):
         ## PAss au suivant ## Annulation deja fait dans le code de la validation !
         print("Traitement terminé. Commande annulée !")
     ch.basic_ack(delivery_tag=method.delivery_tag)
-
+    time.sleep(10)
+    clear_console()
     print("*****************************************************************************************")
+
 
 
 def construct_order_bll_model(customer_bll_model, order_bll_model):

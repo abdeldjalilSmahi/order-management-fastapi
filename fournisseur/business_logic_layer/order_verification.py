@@ -1,9 +1,19 @@
 import json
+import time
+
 from business_logic_layer.message_queues import receveoir_message_a_queue, envoyer_message_a_queue
 from business_logic_layer.models import CustomerBllModel
 from business_logic_layer.businessrules import BusinessRulesCustomer, BusinessRulesProducts, BusinessRulesOrder
 from business_logic_layer.requests_customerside import send_confirmation
 from data_access_layer.models import Status
+import os
+
+
+# Efface l'écran de la console
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 
 
 def on_message_received(ch, method, properties, body):
@@ -17,13 +27,21 @@ def on_message_received(ch, method, properties, body):
                                                    order_number=data.get('order_number'),
                                                    customer_id=None,
                                                    order_id=None
-                                                        , email=data.get('email'),
+                                                   , email=data.get('email'),
                                                    status=Status.cancelled_by_seller,
                                                    decision=message)
         print(f"Customer side : {customer_side_response['message']}")
     if not BusinessRulesProducts.verify_products_names_and_positive_quantities(products):
-        print("liste des produit invalides ou zero ou moins")
-        # lancer processus d'annulation
+        message ="liste des produit invalides ou zero ou moins"
+        print(message)
+        customer_side_response = send_confirmation(customer_number=client.customer_number,
+                                                   order_number=data.get('order_number'),
+                                                   customer_id=None,
+                                                   order_id=None
+                                                   , email=data.get('email'),
+                                                   status=Status.cancelled_by_seller,
+                                                   decision=message)
+        print(f"Customer side : {customer_side_response['message']}")
     else:
         customer_bll_model, order_bll_model, products_quantities = valider_operation(data, client)
         if order_bll_model.actual_status == Status.cancelled_by_seller:
@@ -36,12 +54,13 @@ def on_message_received(ch, method, properties, body):
                                                        order_number=order_bll_model.order_number,
                                                        customer_id=customer_bll_model.customer_id,
                                                        order_id=order_bll_model.order_id
-                                                       , email=customer_bll_model.email, status=order_bll_model.actual_status,
+                                                       , email=customer_bll_model.email,
+                                                       status=order_bll_model.actual_status,
                                                        decision=message)
             print(f"Customer side : {customer_side_response['message']}")
             new_status = Status.cancelled_and_finished
             order_bll_model = BusinessRulesOrder.update_status_order(order_bll_model, new_status)
-            ## Rajouté !!
+
         else:
             data_to_next_step = {
                 "customer_information": customer_bll_model.__dict__,
@@ -52,7 +71,8 @@ def on_message_received(ch, method, properties, body):
             envoyer_message_a_queue('order_verifcation', data_to_send)  # message
             print("Traitement terminé.")
     ch.basic_ack(delivery_tag=method.delivery_tag)
-
+    time.sleep(10)
+    clear_console()
     print("*****************************************************************************************")
 
 

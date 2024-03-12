@@ -105,8 +105,8 @@ class BusinessRulesProducts:
             if quantity > product_dal_model.quantity:
                 motif = "Quantité demandée est supperieure de celle dans le stock"
                 return False, motif
-            motif = "Quantité suffisante !"
-            return True, motif
+        motif = "Quantité suffisante !"
+        return True, motif
 
     @staticmethod
     def get_product_by_name(product_name: str):

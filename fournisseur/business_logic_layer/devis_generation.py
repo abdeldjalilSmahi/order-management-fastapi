@@ -1,9 +1,11 @@
 import datetime
 import json
+import time
 
 from business_logic_layer.businessrules import BusinessRulesProducts, BusinessRulesOrder
 from business_logic_layer.message_queues import receveoir_message_a_queue
 from business_logic_layer.models import CustomerBllModel, OrderBllModel
+from business_logic_layer.order_verification import clear_console
 from business_logic_layer.requests_customerside import send_confirmation, send_devis
 from data_access_layer.models import Status
 
@@ -26,8 +28,10 @@ def on_message_received(ch, method, properties, body):
     customer_side_message = send_devis(devis, business_rules_order.customer.customer_number)
     print(customer_side_message)
     ch.basic_ack(delivery_tag=method.delivery_tag)
-
+    time.sleep(10)
+    clear_console()
     print("*****************************************************************************************")
+
 
 
 def valider_operation(devis: dict, business_rules_order: BusinessRulesOrder):

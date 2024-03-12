@@ -301,8 +301,6 @@ class DataAccessorTransaction:
                     print(f"Le client dont l'email {email} existe déjà.")
                     return customer_dal_model
         except Exception as e:
-            # Ici, vous pouvez gérer les exceptions comme bon vous semble.
-            # Par exemple, vous pouvez enregistrer l'erreur dans un fichier log.
             print(f"Erreur lors de l'ajout du client : {e}")
             raise  # Relancer l'exception pour la gestion d'erreur à un niveau supérieur.
 

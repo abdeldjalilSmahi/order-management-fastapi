@@ -17,8 +17,6 @@ class CommandePlModel(BaseModel):  #JSON de l'API
     email: str
     phone_number: Optional[str] = None
     order_number: int
-    # url: str
-    # method_name: str
     produits: Dict[str, int]
 
 class Decision(BaseModel):

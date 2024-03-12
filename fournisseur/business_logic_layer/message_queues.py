@@ -16,5 +16,5 @@ def receveoir_message_a_queue(queue_name: str, methode_a_executer: callable):
     channel.queue_declare(queue=queue_name)
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue=queue_name, on_message_callback=methode_a_executer)
-    print("Début de la consommation des messages.")
+    print("###############################################")
     channel.start_consuming()

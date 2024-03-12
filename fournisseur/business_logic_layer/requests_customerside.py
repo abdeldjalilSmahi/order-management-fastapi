@@ -22,15 +22,6 @@ def send_confirmation(customer_number: str,
 
 
 def send_devis(devis: dict, customer_number):
-    # message_request = {
-    #     "order_number": order_number,
-    #     "customer_id": customer_id,
-    #     "order_id": order_id,
-    #     "email": email,
-    #     "status": status.value,
-    #     "decision": decision
-    # }
-
     response = requests.put(f"http://127.0.0.1:8000/order_devis/{customer_number}", json=devis)
     return response.json()
 
