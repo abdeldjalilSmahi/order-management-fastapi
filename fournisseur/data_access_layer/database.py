@@ -9,12 +9,12 @@ from data_access_layer.models import Base
 from sqlalchemy.engine import URL
 
 connection_url = URL.create(
-    "mysql+pymysql",  # Dialecte et driver pour MySQL
-    username="jalil",
-    password="Awtbp!718293",  # Remplacez par votre mot de passe réel
+    "mysql+pymysql",
+    username="*****",
+    password="*****",
     host="processus.mysql.database.azure.com",
     port=3306,
-    database="ordermanagement",  # Remplacez par le nom de votre base de données
+    database="ordermanagement",
     query={
         "ssl_disabled": "False"
     }
@@ -49,15 +49,3 @@ class Database:
         return self.session
 
 
-if __name__ == "__main__":
-    # Initialisez la base de données. Cela doit être fait avant d'essayer de créer ou d'interagir avec la base de données
-    db = Database()
-    session = db.get_session()
-    try:
-        # Exécutez une requête de test
-        data = session.query(data_access_layer.models.CustomerDalModel.firstname).all()
-
-        for row in data:
-            print(row)
-    finally:
-        session.close()
